@@ -31,6 +31,8 @@ public class TransactionController {
      *
      * @return A ResponseEntity containing a list of all transactions.
      */
+    @CrossOrigin(origins = "*")
+
     @GetMapping("/transactions")
     public ResponseEntity<?> getAllTransactions() {
         List<Transaction> transactions = transactionRepo.findAll();
