@@ -61,6 +61,7 @@ public class TransactionController {
      * @param transaction The transaction data to be created.
      * @return A ResponseEntity containing the created transaction, with the Location header set.
      */
+    @CrossOrigin(origins = "*")
     @PostMapping("/transactions")
     public ResponseEntity<?> createTransaction(@RequestBody Transaction transaction) {
 
@@ -81,6 +82,7 @@ public class TransactionController {
      * @param transaction The updated transaction data.
      * @return A ResponseEntity containing the updated transaction, or null if not found.
      */
+    @CrossOrigin(origins = "*")
     @PutMapping("/transactions/{id}")
     public ResponseEntity<?> updateTransaction(@PathVariable int id, @RequestBody Transaction transaction) {
         Optional<Transaction> transactionOptional = transactionRepo.findById(id);
