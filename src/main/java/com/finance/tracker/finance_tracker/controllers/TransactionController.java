@@ -11,18 +11,38 @@ import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * REST controller for managing financial transactions.
+ * <p>
+ * This controller provides endpoints for CRUD operations (Create, Read, Update, Delete)
+ * related to the {@link Transaction} entity. Each method corresponds to a specific HTTP
+ * operation, making it possible to perform different actions on the transaction data.
+ */
+
 @RestController
 public class TransactionController {
 
+    // Injecting the TransactionRepo to interact with the database.
     @Autowired
     private TransactionRepo transactionRepo;
 
+    /**
+     * GET /transactions - Retrieves all transactions.
+     *
+     * @return A ResponseEntity containing a list of all transactions.
+     */
     @GetMapping("/transactions")
     public ResponseEntity<?> getAllTransactions() {
         List<Transaction> transactions = transactionRepo.findAll();
         return ResponseEntity.ok(transactions);
     }
 
+    /**
+     * GET /transactions/{id} - Retrieves a transaction by its ID.
+     *
+     * @param id The ID of the transaction to retrieve.
+     * @return A ResponseEntity containing the transaction if found, or null if not found.
+     */
     @GetMapping("/transactions/{id}")
     public ResponseEntity<Transaction> getTransactionById(@PathVariable int id) {
         for (Transaction transaction : transactionRepo.findAll()) {
@@ -33,10 +53,16 @@ public class TransactionController {
         return null;
     }
 
+    /**
+     * POST /transactions - Creates a new transaction.
+     *
+     * @param transaction The transaction data to be created.
+     * @return A ResponseEntity containing the created transaction, with the Location header set.
+     */
     @PostMapping("/transactions")
     public ResponseEntity<?> createTransaction(@RequestBody Transaction transaction) {
 
-        //Obteniendo URL de servicio.
+        // Constructing the URI for the newly created resource.
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
@@ -46,6 +72,13 @@ public class TransactionController {
         return ResponseEntity.created(location).body(transactionRepo.save(transaction));
     }
 
+    /**
+     * PUT /transactions/{id} - Updates an existing transaction.
+     *
+     * @param id The ID of the transaction to update.
+     * @param transaction The updated transaction data.
+     * @return A ResponseEntity containing the updated transaction, or null if not found.
+     */
     @PutMapping("/transactions/{id}")
     public ResponseEntity<?> updateTransaction(@PathVariable int id, @RequestBody Transaction transaction) {
         Optional<Transaction> transactionOptional = transactionRepo.findById(id);
@@ -61,6 +94,12 @@ public class TransactionController {
         return null;
     }
 
+    /**
+     * DELETE /transactions/{id} - Deletes a transaction by its ID.
+     *
+     * @param id The ID of the transaction to delete.
+     * @return A ResponseEntity indicating that the transaction has been deleted.
+     */
     @DeleteMapping("/transactions/{id}")
     public ResponseEntity<?> deleteTransaction(@PathVariable int id) {
         transactionRepo.deleteById(id);
