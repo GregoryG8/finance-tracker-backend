@@ -1,13 +1,18 @@
 package com.finance.tracker.finance_tracker.controllers;
 
+import com.finance.tracker.finance_tracker.dto.FinancialSummaryDTO;
 import com.finance.tracker.finance_tracker.entities.Transaction;
 import com.finance.tracker.finance_tracker.repo.TransactionRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.math.BigDecimal;
 import java.net.URI;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -64,6 +69,25 @@ public class TransactionController {
         return ResponseEntity.ok(transactions);
     }
 
+    @GetMapping("/transactions/by-date")
+    public ResponseEntity<List<Transaction>> getTransactionsByDate(@RequestParam LocalDate startdate, @RequestParam LocalDate enddate) {
+        List<Transaction> transactions = transactionRepo.findByDateBetween(startdate, enddate);
+        if (transactions.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(transactions);
+    }
+
+    @GetMapping("/transactions/summary")
+    public ResponseEntity<FinancialSummaryDTO> getTransactionsSummary(@RequestParam LocalDate startDate, @RequestParam LocalDate endDate) {
+        BigDecimal totalIncome = transactionRepo.findTotalIncome(startDate, endDate);
+        BigDecimal totalExpense = transactionRepo.findTotalExpense(startDate, endDate);
+        BigDecimal netBalance = totalIncome.subtract(totalExpense);
+
+        FinancialSummaryDTO summary = new FinancialSummaryDTO(totalIncome, totalExpense, netBalance);
+
+        return ResponseEntity.ok(summary);
+    }
 
     /**
      * POST /transactions - Creates a new transaction.
