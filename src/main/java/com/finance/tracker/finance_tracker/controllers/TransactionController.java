@@ -4,7 +4,6 @@ import com.finance.tracker.finance_tracker.dto.FinancialSummaryDTO;
 import com.finance.tracker.finance_tracker.entities.Transaction;
 import com.finance.tracker.finance_tracker.repo.TransactionRepo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.core.Local;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -12,7 +11,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
