@@ -55,6 +55,16 @@ public class TransactionController {
         return null;
     }
 
+    @GetMapping("/transactions/by-category")
+    public ResponseEntity<List<Transaction>> getTransactionsByCategory(@RequestParam String categoryName) {
+        List<Transaction> transactions = transactionRepo.findByCategoryName(categoryName);
+        if (transactions.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(transactions);
+    }
+
+
     /**
      * POST /transactions - Creates a new transaction.
      *
@@ -104,6 +114,7 @@ public class TransactionController {
      * @param id The ID of the transaction to delete.
      * @return A ResponseEntity indicating that the transaction has been deleted.
      */
+    @CrossOrigin(origins = "*")
     @DeleteMapping("/transactions/{id}")
     public ResponseEntity<?> deleteTransaction(@PathVariable int id) {
         transactionRepo.deleteById(id);
